@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Login</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background-image:url("https://images.unsplash.com/photo-1504198266285-165a0f2a1c7a");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:380px;
+margin:120px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:8px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#0066cc;
+border:none;
+color:white;
+font-size:16px;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#004c99;
+}
+
+.links{
+text-align:center;
+margin-top:15px;
+}
+
+a{
+text-decoration:none;
+color:#0066cc;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Flight Booking System</h1>
+</div>
+
+<div class="container">
+
+<h2>User Login</h2>
+
+<form action="/login" method="post">
+
+<label>Email</label>
+<input type="email" name="email">
+
+<label>Password</label>
+<input type="password" name="password">
+
+<button type="submit">Login</button>
+
+</form>
+
+<div class="links">
+<p><a href="/auth/forgot-password">Forgot Password?</a></p>
+<p>New user? <a href="/auth/register">Register</a></p>
+</div>
+
+</div>
+
+</body>
+</html>

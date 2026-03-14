@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1502920917128-1aa500764ce7");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:500px;
+margin:100px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin-top:8px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#28a745;
+border:none;
+color:white;
+font-size:16px;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1e7e34;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Payment</h1>
+</div>
+
+<div class="container">
+
+<h2>Complete Payment</h2>
+
+<form action="/booking-success">
+
+<label>Card Holder Name</label>
+<input type="text">
+
+<label>Card Number</label>
+<input type="text">
+
+<label>Expiry Date</label>
+<input type="month">
+
+<label>CVV</label>
+<input type="password">
+
+<button type="submit">Pay Now</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

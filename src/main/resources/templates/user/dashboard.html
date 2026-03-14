@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Dashboard</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.nav{
+background:#004080;
+padding:10px;
+text-align:center;
+}
+
+.nav a{
+color:white;
+text-decoration:none;
+margin:0 15px;
+font-size:16px;
+}
+
+.container{
+width:900px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+}
+
+.card{
+border:1px solid #ccc;
+padding:20px;
+margin-bottom:20px;
+border-radius:5px;
+}
+
+button{
+padding:10px 15px;
+background:#0066cc;
+border:none;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#004c99;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>User Dashboard</h1>
+</div>
+
+<div class="nav">
+<a href="/">Home</a>
+<a href="/search-flights">Search Flights</a>
+<a href="/profile">Profile</a>
+<a href="/booking-history">My Bookings</a>
+</div>
+
+<div class="container">
+
+<h2>Welcome Passenger</h2>
+
+<div class="card">
+<h3>Book New Flight</h3>
+<p>Search and book flights to your favorite destinations.</p>
+<a href="/search-flights">
+<button>Search Flights</button>
+</a>
+</div>
+
+<div class="card">
+<h3>View Booking History</h3>
+<p>Check all your previous flight bookings.</p>
+<a href="/booking-history">
+<button>View Bookings</button>
+</a>
+</div>
+
+</div>
+
+</body>
+</html>

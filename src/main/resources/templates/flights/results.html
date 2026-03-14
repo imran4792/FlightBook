@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Available Flights</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:900px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+}
+
+h2{
+text-align:center;
+margin-bottom:30px;
+}
+
+.flight-card{
+border:1px solid #ddd;
+padding:15px;
+margin-bottom:15px;
+border-radius:5px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.flight-info{
+font-size:16px;
+}
+
+.price{
+font-size:18px;
+color:#0066cc;
+font-weight:bold;
+}
+
+button{
+padding:8px 15px;
+background:#28a745;
+border:none;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1e7e34;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Available Flights</h1>
+</div>
+
+<div class="container">
+
+<h2>Flights From Hyderabad → Delhi</h2>
+
+<div class="flight-card">
+
+<div class="flight-info">
+<b>IndiGo</b><br>
+Flight: 6E202<br>
+Departure: 10:00 AM<br>
+Arrival: 12:30 PM
+</div>
+
+<div class="price">₹5200</div>
+
+<a href="/flight-details"><button>View</button></a>
+
+</div>
+
+<div class="flight-card">
+
+<div class="flight-info">
+<b>Air India</b><br>
+Flight: AI440<br>
+Departure: 01:30 PM<br>
+Arrival: 04:00 PM
+</div>
+
+<div class="price">₹6100</div>
+
+<a href="/flight-details"><button>View</button></a>
+
+</div>
+
+<div class="flight-card">
+
+<div class="flight-info">
+<b>Vistara</b><br>
+Flight: UK870<br>
+Departure: 06:15 PM<br>
+Arrival: 08:40 PM
+</div>
+
+<div class="price">₹5900</div>
+
+<a href="/flight-details"><button>View</button></a>
+
+</div>
+
+</div>
+
+</body>
+</html>

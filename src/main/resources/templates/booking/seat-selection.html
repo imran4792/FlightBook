@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Seat Selection</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1580674285054-bed31e145f59");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:700px;
+margin:60px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+text-align:center;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.seats{
+display:grid;
+grid-template-columns:repeat(6,60px);
+gap:10px;
+justify-content:center;
+margin-top:20px;
+}
+
+.seat{
+padding:10px;
+border:1px solid #ccc;
+border-radius:4px;
+background:#e6f2ff;
+cursor:pointer;
+}
+
+.seat:hover{
+background:#99ccff;
+}
+
+button{
+margin-top:25px;
+padding:12px 20px;
+background:#0066cc;
+border:none;
+color:white;
+font-size:16px;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#004c99;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Select Your Seat</h1>
+</div>
+
+<div class="container">
+
+<h2>Choose Available Seat</h2>
+
+<div class="seats">
+
+<div class="seat">1A</div>
+<div class="seat">1B</div>
+<div class="seat">1C</div>
+<div class="seat">1D</div>
+<div class="seat">1E</div>
+<div class="seat">1F</div>
+
+<div class="seat">2A</div>
+<div class="seat">2B</div>
+<div class="seat">2C</div>
+<div class="seat">2D</div>
+<div class="seat">2E</div>
+<div class="seat">2F</div>
+
+<div class="seat">3A</div>
+<div class="seat">3B</div>
+<div class="seat">3C</div>
+<div class="seat">3D</div>
+<div class="seat">3E</div>
+<div class="seat">3F</div>
+
+</div>
+
+<a href="/payment">
+<button>Continue to Payment</button>
+</a>
+
+</div>
+
+</body>
+</html>

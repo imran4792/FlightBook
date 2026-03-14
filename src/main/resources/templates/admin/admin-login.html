@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Login</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1504198266285-165a0f2a1c7a");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+text-align:center;
+padding:15px;
+}
+
+.container{
+width:400px;
+margin:140px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#0066cc;
+border:none;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#004c99;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Admin Login</h1>
+</div>
+
+<div class="container">
+
+<form action="/admin/dashboard">
+
+<label>Email</label>
+<input type="email">
+
+<label>Password</label>
+<input type="password">
+
+<button type="submit">Login</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

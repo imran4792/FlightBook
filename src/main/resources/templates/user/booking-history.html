@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Booking History</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background-image:url("https://images.unsplash.com/photo-1502920917128-1aa500764ce7");
+background-size:cover;
+background-position:center;
+}
+
+.header{
+background:#003366;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:900px;
+margin:60px auto;
+background:white;
+padding:30px;
+border-radius:6px;
+box-shadow:0 0 8px rgba(0,0,0,0.3);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th, td{
+padding:10px;
+border-bottom:1px solid #ccc;
+text-align:center;
+}
+
+th{
+background:#004080;
+color:white;
+}
+
+button{
+padding:6px 10px;
+background:#0066cc;
+border:none;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>My Bookings</h1>
+</div>
+
+<div class="container">
+
+<table>
+
+<tr>
+<th>Booking ID</th>
+<th>Flight</th>
+<th>From</th>
+<th>To</th>
+<th>Status</th>
+<th>Details</th>
+</tr>
+
+<tr>
+<td>FB10245</td>
+<td>IndiGo 6E202</td>
+<td>Hyderabad</td>
+<td>Delhi</td>
+<td>Confirmed</td>
+<td><a href="/ticket-details"><button>View</button></a></td>
+</tr>
+
+<tr>
+<td>FB10246</td>
+<td>Air India AI440</td>
+<td>Mumbai</td>
+<td>Chennai</td>
+<td>Completed</td>
+<td><a href="/ticket-details"><button>View</button></a></td>
+</tr>
+
+</table>
+
+</div>
+
+</body>
+</html>
