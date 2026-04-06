@@ -2,10 +2,6 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-COPY . .
+COPY target/flightbooking-1.0.jar app.jar
 
-RUN chmod +x mvnw
-
-RUN ./mvnw clean package -DskipTests
-
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["java", "-jar", "app.jar"]
