@@ -75,7 +75,7 @@ public class AdminController {
             return "admin/admin-login";
         }
     }
-
+    
     @GetMapping("/admin/register")
     public String adminRegisterPage() {
         return "admin/admin-register";
