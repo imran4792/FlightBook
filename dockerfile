@@ -1,7 +1,12 @@
-FROM eclipse-temurin:21-jdk
-
+# Build stage
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-COPY target/flightbooking-1.0.jar app.jar
+# Run stage
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=build /app/target/flightbooking-1.0.jar app.jar
 
 CMD ["java", "-jar", "app.jar"]
