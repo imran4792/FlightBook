@@ -1,86 +1,627 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Manage Bookings</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings - FlightBook Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1580674285054-bed31e145f59");
-background-size:cover;
-background-position:center;
-}
+        .header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
 
-.container{
-width:900px;
-margin:50px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
+        .logo span {
+            color: #ff6b35;
+        }
 
-th, td{
-padding:10px;
-border-bottom:1px solid #ccc;
-text-align:center;
-}
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
 
-th{
-background:#004080;
-color:white;
-}
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
 
-</style>
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1a73e8;
+        }
+
+        .stat-card.confirmed {
+            border-left-color: #34a853;
+        }
+
+        .stat-card.pending {
+            border-left-color: #fbbc04;
+        }
+
+        .stat-card.cancelled {
+            border-left-color: #ea4335;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .filters-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .filter-input {
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .filter-button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-button:hover {
+            background: #1557b0;
+            transform: translateY(-1px);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-stats {
+            color: #666;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #1a73e8;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .booking-id {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .passenger-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .passenger-name {
+            font-weight: 500;
+        }
+
+        .passenger-email {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .flight-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flight-number {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .flight-route {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .booking-amount {
+            font-weight: 600;
+            color: #34a853;
+        }
+
+        .status-confirmed {
+            background: #e8f5e8;
+            color: #34a853;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fef7e0;
+            color: #f57c00;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-cancelled {
+            background: #fce8e6;
+            color: #ea4335;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: #e8f4fd;
+            color: #1a73e8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-view {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: #1557b0;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #ea4335;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #d33b2c;
+            transform: translateY(-1px);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #e1e5e9;
+            background: white;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        @media (max-width: 1024px) {
+            .filters-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .filters-grid .filter-group:nth-child(5) {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Flight<span>Book</span> Admin</div>
+            <nav class="nav-links">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/add-flight">Add Flight</a>
+                <a href="/admin/manage-flights">Flights</a>
+                <a href="/admin/manage-bookings" class="active">Bookings</a>
+                <a href="/admin/manage-users">Users</a>
+            </nav>
+        </div>
+    </header>
 
-<div class="header">
-<h1>Manage Bookings</h1>
-</div>
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Manage Bookings</h1>
+        </div>
 
-<div class="container">
+        <div class="stats-cards">
+            <div class="stat-card confirmed">
+                <div class="stat-value" th:text="${confirmedBookings}"></div>
+                <div class="stat-label">Confirmed Bookings</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-value" th:text="${pendingBookings}"></div>
+                <div class="stat-label">Pending Bookings</div>
+            </div>
+            <div class="stat-card cancelled">
+                <div class="stat-value" th:text="${cancelledBookings}"></div>
+                <div class="stat-label">Cancelled Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}"></div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
 
-<table>
+        <div class="filters-section">
+            <form class="filters-grid" method="GET" action="/admin/manage-bookings">
+                <div class="filter-group">
+                    <label for="search">Search Bookings</label>
+                    <input type="text" id="search" name="search" class="filter-input" 
+                           placeholder="Booking ID, passenger name, or flight..." 
+                           th:value="${search}">
+                </div>
+                <div class="filter-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" class="filter-input">
+                        <option value="">All Status</option>
+                        <option value="CONFIRMED" th:selected="${status == 'CONFIRMED'}">Confirmed</option>
+                        <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
+                        <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Completed</option>
+                        <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFrom">From Date</label>
+                    <input type="date" id="dateFrom" name="dateFrom" class="filter-input" th:value="${dateFrom}">
+                </div>
+                <div class="filter-group">
+                    <label for="dateTo">To Date</label>
+                    <input type="date" id="dateTo" name="dateTo" class="filter-input" th:value="${dateTo}">
+                </div>
+                <button type="submit" class="filter-button">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+            </form>
+        </div>
 
-<tr>
-<th>Booking ID</th>
-<th>Passenger</th>
-<th>Flight</th>
-<th>Status</th>
-</tr>
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title">Recent Bookings</h2>
+                <div class="table-stats" th:text="'Showing ' + ${bookings.size()} + ' of ' + ${totalBookings} + ' bookings'"></div>
+            </div>
 
-<tr>
-<td>FB10245</td>
-<td>John Doe</td>
-<td>IndiGo 6E202</td>
-<td>Confirmed</td>
-</tr>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking Details</th>
+                        <th>Passenger</th>
+                        <th>Flight</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td>
+                            <div class="booking-id" th:text="${booking.bookingReference}"></div>
+                            <div style="color: #666; font-size: 12px;" th:text="'Booked on ' + ${booking.bookingDate}"></div>
+                        </td>
+                        <td>
+                            <div class="passenger-info">
+                                <div class="passenger-name" th:text="${booking.passengerName}"></div>
+                                <div class="passenger-email" th:text="'Age: ' + ${booking.age}"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flight-info">
+                                <div class="flight-number" th:text="${booking.flightNumber}"></div>
+                                <div class="flight-route" th:text="${booking.route}"></div>
+                            </div>
+                        </td>
+                        <td class="booking-amount" th:text="'₹' + ${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 0, 'POINT')}"></td>
+                        <td>
+                            <span th:class="'status-' + ${#strings.toLowerCase(booking.status)}" 
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(booking.status))}"></span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-view" th:attr="onclick=|viewBooking('${booking.bookingReference}')|">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button th:if="${booking.status != 'CANCELLED' && booking.status != 'COMPLETED'}" 
+                                        class="btn-cancel" 
+                                        th:attr="onclick=|cancelBooking('${booking.bookingReference}')|">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(bookings)}">
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-search" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                            <br>
+                            No bookings found matching your criteria.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-<tr>
-<td>FB10246</td>
-<td>Rahul Sharma</td>
-<td>AI440</td>
-<td>Completed</td>
-</tr>
+        <div class="pagination">
+            <button class="page-btn" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span>...</span>
+            <button class="page-btn">103</button>
+            <button class="page-btn">Next <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </main>
 
-</table>
+    <script>
+        // Filter functionality
+        document.querySelector('.filters-grid').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Implement filter logic here
+            console.log('Filtering bookings...');
+        });
 
-</div>
+        // View booking function
+        function viewBooking(bookingId) {
+            window.location.href = `/admin/booking-details/${bookingId}`;
+        }
 
+        // Cancel booking function
+        function cancelBooking(bookingId) {
+            if (confirm(`Are you sure you want to cancel booking ${bookingId}?`)) {
+                // Send POST request to cancel booking
+                fetch(`/admin/cancel-booking/${bookingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'success') {
+                        alert('Booking cancelled successfully!');
+                        location.reload(); // Reload the page to show updated status
+                    } else {
+                        alert('Error: ' + result);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while cancelling the booking.');
+                });
+            }
+        }
+
+        // Table row hover effects
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.background = '#f0f7ff';
+            });
+
+            row.addEventListener('mouseleave', function() {
+                this.style.background = '';
+            });
+        });
+
+        // Set default date range
+        const today = new Date();
+        const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        document.getElementById('date-to').valueAsDate = today;
+        document.getElementById('date-from').valueAsDate = lastWeek;
+    </script>
 </body>
 </html>

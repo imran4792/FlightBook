@@ -1,62 +1,274 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Booking Failed</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Failed - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style th:replace="fragments/header :: header-styles"></style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1504198266285-165a0f2a1c7a");
-background-size:cover;
-background-position:center;
-}
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 30px 40px;
+        }
 
-.container{
-width:500px;
-margin:150px auto;
-background:white;
-padding:40px;
-text-align:center;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        .failed-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
 
-h1{
-color:red;
-}
+        .failed-header {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+        }
 
-button{
-margin-top:20px;
-padding:12px 20px;
-background:#0066cc;
-border:none;
-color:white;
-border-radius:4px;
-cursor:pointer;
-}
+        .failed-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: shake 0.5s ease-in-out;
+        }
 
-button:hover{
-background:#004c99;
-}
+        .failed-icon i {
+            font-size: 40px;
+            color: #dc3545;
+        }
 
-</style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .failed-header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .failed-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .failed-content {
+            padding: 40px 30px;
+        }
+
+        .error-details {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .error-details h3 {
+            color: #dc3545;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-details h3 i {
+            font-size: 20px;
+        }
+
+        .error-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .error-details li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .error-details li i {
+            color: #dc3545;
+            margin-top: 2px;
+            font-size: 12px;
+        }
+
+        .support-notice {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            border: 1px solid #f39c12;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .support-notice i {
+            color: #f39c12;
+            font-size: 24px;
+        }
+
+        .support-notice-content h3 {
+            color: #f39c12;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .support-notice-content p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .failed-content {
+                padding: 30px 20px;
+            }
+
+            .main-content {
+                padding: 100px 20px 40px;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .nav {
+                gap: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header th:replace="fragments/header :: header"></header>
 
-<div class="container">
+    <div class="main-content">
+        <div class="failed-container">
+            <div class="failed-header">
+                <div class="failed-icon">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h1>Booking Failed</h1>
+                <p>Something went wrong during the booking process</p>
+            </div>
 
-<h1>Booking Failed</h1>
+            <div class="failed-content">
+                <div class="error-details">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Possible Reasons</h3>
+                    <ul>
+                        <li><i class="fas fa-circle"></i> Payment processing failed</li>
+                        <li><i class="fas fa-circle"></i> Insufficient funds in your account</li>
+                        <li><i class="fas fa-circle"></i> Invalid card details provided</li>
+                        <li><i class="fas fa-circle"></i> Network connectivity issues</li>
+                        <li><i class="fas fa-circle"></i> Seats no longer available</li>
+                    </ul>
+                </div>
 
-<p>Something went wrong during the booking process.</p>
+                <div class="support-notice">
+                    <i class="fas fa-headset"></i>
+                    <div class="support-notice-content">
+                        <h3>Need Help?</h3>
+                        <p>Contact our support team at support@flightbook.com or call 1-800-FLIGHTS</p>
+                    </div>
+                </div>
 
-<a href="/search-flights">
-<button>Try Again</button>
-</a>
-
-</div>
-
+                <div class="action-buttons">
+                    <a href="/search-flights" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Try Again
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:replace="fragments/header :: header-script"></script>
 </body>
 </html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <style th:fragment="header-styles">
+        /* Header Container */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        /* Header Content Layout */
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+        /* Logo */
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .logo span {
+            color: #ff6b35;
+        }
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav a:hover {
+            color: #1a73e8;
+        }
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #1a73e8;
+            transition: width 0.3s ease;
+        }
+        .nav a:hover::after {
+            width: 100%;
+        }
+        /* Profile Icon */
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            display: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        .profile-dropdown.show {
+            display: block;
+        }
+        .profile-dropdown a, .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .profile-dropdown a:hover, .profile-dropdown button:hover {
+            background-color: #f5f5f5;
+            color: #1a73e8;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 15px 20px;
+            }
+            .nav {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header th:fragment="header" class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Flight<span>Book</span></a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/search-flights" class="active">Flights</a>
+                <!-- If NOT logged in -->
+                <div th:if="${user == null}">
+                    <a href="/login">Login</a>
+                </div>
+                <!-- If logged in -->
+                <div th:if="${user != null}" style="position: relative;">
+                    <div class="profile-icon" onclick="toggleProfileDropdown()">
+                        <span th:text="${user.firstName != null and user.lastName != null ? user.firstName.substring(0,1) + user.lastName.substring(0,1) : 'U'}">IK</span>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                        <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                        <a href="/booking-history"><i class="fas fa-history"></i> Booking History</a>
+                        <button onclick="location.href='/logout'"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <script th:fragment="header-script">
+        function toggleProfileDropdown() {
+            document.getElementById("profileDropdown").classList.toggle("show");
+        }
+        document.addEventListener("click", function(event) {
+            const icon = document.querySelector(".profile-icon");
+            const dropdown = document.getElementById("profileDropdown");
+            if (icon && dropdown && !icon.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    </script>
+</body>
+</html>

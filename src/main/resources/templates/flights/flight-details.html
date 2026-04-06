@@ -1,92 +1,511 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Flight Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Details - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style th:replace="fragments/header :: header-styles"></style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1502920917128-1aa500764ce7");
-background-size:cover;
-background-position:center;
-}
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-.container{
-width:700px;
-margin:80px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        .page-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
 
-h2{
-text-align:center;
-margin-bottom:20px;
-}
+        .flight-details-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
 
-.details{
-line-height:28px;
-font-size:16px;
-}
+        .flight-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f5f7fa;
+        }
 
-button{
-width:100%;
-margin-top:20px;
-padding:12px;
-background:#0066cc;
-border:none;
-color:white;
-font-size:16px;
-border-radius:4px;
-cursor:pointer;
-}
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-button:hover{
-background:#004c99;
-}
+        .airline-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
 
-</style>
+        .airline-details h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .flight-number {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .price-tag {
+            background: linear-gradient(45deg, #34a853, #81c784);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3);
+        }
+
+        .route-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .route-point {
+            text-align: center;
+            flex: 1;
+        }
+
+        .city-code {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+
+        .city-name {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .time-display {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .route-connector {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .route-line {
+            height: 3px;
+            background: linear-gradient(90deg, #1a73e8, #4285f4);
+            border-radius: 2px;
+            flex: 1;
+            position: relative;
+        }
+
+        .plane-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: #1a73e8;
+            font-size: 18px;
+        }
+
+        .flight-duration {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .info-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .info-content p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .baggage-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .baggage-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .baggage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .baggage-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .baggage-icon {
+            color: #856404;
+            font-size: 16px;
+        }
+
+        .baggage-text {
+            font-size: 14px;
+            color: #856404;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .book-button {
+            flex: 1;
+            padding: 18px 30px;
+            background: linear-gradient(45deg, #34a853, #81c784);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .book-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+        }
+
+        .back-button {
+            padding: 18px 30px;
+            background: white;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .back-button:hover {
+            background: #1a73e8;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .flight-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .route-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .route-connector {
+                order: 1;
+            }
+
+            .flight-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+
+            .book-button, .back-button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header th:replace="fragments/header :: header"></header>
 
-<div class="header">
-<h1>Flight Details</h1>
-</div>
+    <main class="main-content">
+        <h1 class="page-title">Flight Details</h1>
+        <p class="page-subtitle">Review your selected flight information</p>
 
-<div class="container">
+        <div class="flight-details-container">
+            <div class="flight-header">
+                <div class="airline-info">
+                    <div class="airline-logo">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="airline-details">
+                        <h2 th:text="${flight.airline.airlineName} + ' ' + ${flight.flightNumber}"></h2>
+                        <div class="flight-number">Flight <span th:text="${flight.flightNumber}"></span></div>
+                    </div>
+                </div>
+                <div class="price-tag" th:text="'₹' + ${flight.price}"></div>
+            </div>
 
-<h2>IndiGo Flight 6E202</h2>
+            <div class="route-section">
+                <div class="route-point">
+                    <div class="city-code" th:text="${flight.source}"></div>
+                    <div class="city-name" th:text="${flight.source}"></div>
+                    <div class="time-display" th:text="${flight.departureTime}"></div>
+                </div>
 
-<div class="details">
+                <div class="route-connector">
+                    <div class="flight-duration">2h 15m</div>
+                    <div class="route-line"></div>
+                    <div class="plane-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                </div>
 
-<b>Airline:</b> IndiGo<br>
-<b>Flight Number:</b> 6E202<br>
-<b>From:</b> Hyderabad<br>
-<b>To:</b> Delhi<br>
-<b>Departure Time:</b> 10:00 AM<br>
-<b>Arrival Time:</b> 12:30 PM<br>
-<b>Aircraft:</b> Airbus A320<br>
-<b>Cabin Class:</b> Economy<br>
-<b>Price:</b> ₹5200<br>
+                <div class="route-point">
+                    <div class="city-code" th:text="${flight.destination}"></div>
+                    <div class="city-name" th:text="${flight.destination}"></div>
+                    <div class="time-display" th:text="${flight.arrivalTime}"></div>
+                </div>
+            </div>
 
-</div>
+            <div class="flight-info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Aircraft</h4>
+                        <p>Airbus A320</p>
+                    </div>
+                </div>
 
-<a href="/passenger-details">
-<button>Continue Booking</button>
-</a>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-chair"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Class</h4>
+                        <p>Economy</p>
+                    </div>
+                </div>
 
-</div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Duration</h4>
+                        <p>2 hours 15 minutes</p>
+                    </div>
+                </div>
 
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Passengers</h4>
+                        <p th:text="${passengers} + ' passenger(s)'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="baggage-info">
+                <h3 class="baggage-title">
+                    <i class="fas fa-suitcase"></i> Baggage Information
+                </h3>
+                <div class="baggage-grid">
+                    <div class="baggage-item">
+                        <i class="fas fa-suitcase baggage-icon"></i>
+                        <div class="baggage-text">
+                            <strong>Cabin Baggage:</strong> 7 kg
+                        </div>
+                    </div>
+                    <div class="baggage-item">
+                        <i class="fas fa-suitcase-rolling baggage-icon"></i>
+                        <div class="baggage-text">
+                            <strong>Checked Baggage:</strong> 20 kg
+                        </div>
+                    </div>
+                    <div class="baggage-item">
+                        <i class="fas fa-hand baggage-icon"></i>
+                        <div class="baggage-text">
+                            <strong>Personal Item:</strong> 1 item
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-actions">
+                <a th:href="'/passenger-details?flightId=' + ${flight.flightId} + '&passengers=' + ${passengers}" class="book-button">
+                    <i class="fas fa-arrow-right"></i> Continue to Passenger Details
+                </a>
+                <a href="/results" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Results
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileIcon = document.querySelector('.profile-icon');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && dropdown && !profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+    <script th:replace="fragments/header :: header-script"></script>
 </body>
 </html>

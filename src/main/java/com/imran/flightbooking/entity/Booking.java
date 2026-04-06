@@ -14,9 +14,18 @@ public class Booking {
 
     private Long userId;
     private Long flightId;
+
+    // unique booking id visible for user (FB-XXXXXXXX)
+    private String bookingReference;
+
     private String bookingDate;
     private String status;
     private double totalPrice;
+    private String passengerName;
+    private int age;
+    private String flightNumber;
+    private String route;
+    
 	public Long getBookingId() {
 		return bookingId;
 	}
@@ -53,6 +62,42 @@ public class Booking {
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+	
+	public String getPassengerName() {
+		return passengerName;
+	}
+	public void setPassengerName(String passengerName) {
+		this.passengerName = passengerName;
+	}
+	
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public String getFlightNumber() {
+		return flightNumber;
+	}
+	public void setFlightNumber(String flightNumber) {
+		this.flightNumber = flightNumber;
+	}
+	
+	public String getRoute() {
+		return route;
+	}
+	public void setRoute(String route) {
+		this.route = route;
+	}
+
+    public String getBookingReference() {
+        return bookingReference;
+    }
+
+    public void setBookingReference(String bookingReference) {
+        this.bookingReference = bookingReference;
+    }
     
     
 }

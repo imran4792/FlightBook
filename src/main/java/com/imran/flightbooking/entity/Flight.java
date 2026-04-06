@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Flight {
@@ -18,6 +20,16 @@ public class Flight {
     private String departureTime;
     private String arrivalTime;
     private double price;
+
+    @ManyToOne
+    @JoinColumn(name = "airline_id")
+    private Airline airline;
+
+    private String status = "active"; // active or inactive
+
+    public Flight() {
+    }
+
 	public Long getFlightId() {
 		return flightId;
 	}
@@ -60,6 +72,20 @@ public class Flight {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-    
-    
+
+	public Airline getAirline() {
+		return airline;
+	}
+
+	public void setAirline(Airline airline) {
+		this.airline = airline;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

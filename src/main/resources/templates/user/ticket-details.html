@@ -1,72 +1,650 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Ticket Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1580674285054-bed31e145f59");
-background-size:cover;
-background-position:center;
-}
+        .header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.container{
-width:600px;
-margin:120px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
 
-h2{
-text-align:center;
-margin-bottom:20px;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
 
-.details{
-line-height:28px;
-}
+        .logo span {
+            color: #ff6b35;
+        }
 
-button{
-margin-top:20px;
-padding:10px 15px;
-background:#0066cc;
-border:none;
-color:white;
-border-radius:4px;
-cursor:pointer;
-}
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-</style>
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .ticket-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticket-header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .ticket-header::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #f5f7fa;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .ticket-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .booking-ref {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .ticket-body {
+            padding: 40px;
+        }
+
+        .flight-info-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .departure-info, .arrival-info {
+            text-align: center;
+        }
+
+        .city-code {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+
+        .city-name {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .time-display {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .date-display {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .flight-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plane-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #34a853, #81c784);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3);
+        }
+
+        .flight-line {
+            height: 3px;
+            background: linear-gradient(90deg, #1a73e8, #4285f4);
+            border-radius: 2px;
+            width: 100px;
+        }
+
+        .flight-details {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .passenger-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f5f7fa;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .qr-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .qr-code {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #666;
+        }
+
+        .qr-info {
+            flex: 1;
+            margin-left: 30px;
+        }
+
+        .qr-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .qr-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .important-notice {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            border: 1px solid #f39c12;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .notice-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notice-content {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .ticket-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #34a853, #81c784);
+            color: white;
+            border: none;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+        }
+
+        .share-btn {
+            background: white;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+
+        .share-btn:hover {
+            background: #1a73e8;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .home-btn {
+            background: #f5f7fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .home-btn:hover {
+            background: #e1e5e9;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #e8f5e8;
+            color: #34a853;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .flight-info-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .flight-connector {
+                order: 2;
+            }
+
+            .passenger-info {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .qr-info {
+                margin-left: 0;
+            }
+
+            .ticket-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Flight<span>Book</span></div>
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" th:text="${booking.passengerName}"></div>
+                        <div class="user-role">Passenger</div>
+                    </div>
+                </div>
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
 
-<div class="container">
+    <main class="main-content">
+        <h1 class="page-title">E-Ticket Details</h1>
+        <p class="page-subtitle">Your flight confirmation and ticket information</p>
 
-<h2>Flight Ticket</h2>
+        <div class="ticket-container">
+            <div class="status-badge">Confirmed</div>
 
-<div class="details">
+            <div class="ticket-header">
+                <h1 class="ticket-title">FlightBook E-Ticket</h1>
+                <div class="booking-ref" th:text="'Booking Reference: FB' + ${booking.bookingId}"></div>
+            </div>
 
-<b>Passenger:</b> John Doe<br>
-<b>Flight:</b> IndiGo 6E202<br>
-<b>From:</b> Hyderabad<br>
-<b>To:</b> Delhi<br>
-<b>Seat:</b> 2B<br>
-<b>Date:</b> 20 July 2026<br>
-<b>Status:</b> Confirmed<br>
+            <div class="ticket-body">
+                <div class="flight-info-section">
+                    <div class="departure-info">
+                        <div class="city-code" th:text="${booking.route.split(' → ')[0].substring(0,3)}"></div>
+                        <div class="city-name" th:text="${booking.route.split(' → ')[0]}"></div>
+                        <div class="time-display">14:30</div>
+                        <div class="date-display">Dec 25, 2024</div>
+                    </div>
 
-</div>
+                    <div class="flight-connector">
+                        <div class="plane-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="flight-line"></div>
+                        <div class="flight-details">
+                            <div th:text="${booking.flightNumber}"></div>
+                            <div>2h 15m • Economy</div>
+                        </div>
+                    </div>
 
-<a href="/">
-<button>Return Home</button>
-</a>
+                    <div class="arrival-info">
+                        <div class="city-code" th:text="${booking.route.split(' → ')[1].substring(0,3)}"></div>
+                        <div class="city-name" th:text="${booking.route.split(' → ')[1]}"></div>
+                        <div class="time-display">16:45</div>
+                        <div class="date-display" th:text="${booking.bookingDate}"></div>
+                    </div>
+                </div>
 
-</div>
+                <div class="passenger-info">
+                    <div class="info-card">
+                        <h3 class="card-title">
+                            <div class="card-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            Passenger Details
+                        </h3>
+                        <div class="info-row">
+                            <span class="info-label">Name</span>
+                            <span class="info-value" th:text="${booking.passengerName}"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Seat Number</span>
+                            <span class="info-value">2B</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">PNR</span>
+                            <span class="info-value">ABC123456</span>
+                        </div>
+                    </div>
 
+                    <div class="info-card">
+                        <h3 class="card-title">
+                            <div class="card-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            Flight Information
+                        </h3>
+                        <div class="info-row">
+                            <span class="info-label">Flight Number</span>
+                            <span class="info-value">6E202</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Aircraft</span>
+                            <span class="info-value">Airbus A320</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Class</span>
+                            <span class="info-value">Economy</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3 class="card-title">
+                            <div class="card-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            Baggage Allowance
+                        </h3>
+                        <div class="info-row">
+                            <span class="info-label">Cabin Baggage</span>
+                            <span class="info-value">7 kg</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Checked Baggage</span>
+                            <span class="info-value">20 kg</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Personal Item</span>
+                            <span class="info-value">1 item</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qr-section">
+                    <div class="qr-code">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="qr-info">
+                        <h3 class="qr-title">Digital Boarding Pass</h3>
+                        <p class="qr-description">
+                            Show this QR code at the airport check-in counter or use it for contactless boarding.
+                            Make sure your device is charged and the screen is clearly visible.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="important-notice">
+                    <h3 class="notice-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Important Information
+                    </h3>
+                    <div class="notice-content">
+                        <p>• Please arrive at the airport at least 2 hours before domestic flights and 3 hours before international flights.</p>
+                        <p>• Carry a valid government-issued photo ID proof for verification.</p>
+                        <p>• Check-in counters close 45 minutes before departure for domestic flights.</p>
+                        <p>• This ticket is non-transferable and valid only for the passenger named above.</p>
+                    </div>
+                </div>
+
+                <div class="ticket-actions">
+                    <button class="action-btn download-btn">
+                        <i class="fas fa-download"></i> Download Ticket
+                    </button>
+                    <button class="action-btn share-btn">
+                        <i class="fas fa-share"></i> Share Ticket
+                    </button>
+                    <a href="/" class="action-btn home-btn">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

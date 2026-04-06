@@ -14,6 +14,17 @@ public class Airline {
 
     private String airlineName;
     private String airlineCode;
+    private String country;
+
+    public Airline() {
+    }
+
+    public Airline(String airlineName, String airlineCode, String country) {
+        this.airlineName = airlineName;
+        this.airlineCode = airlineCode;
+        this.country = country;
+    }
+
 	public Long getAirlineId() {
 		return airlineId;
 	}
@@ -32,6 +43,12 @@ public class Airline {
 	public void setAirlineCode(String airlineCode) {
 		this.airlineCode = airlineCode;
 	}
-    
-    
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

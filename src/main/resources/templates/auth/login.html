@@ -1,104 +1,421 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>User Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background-image:url("https://images.unsplash.com/photo-1504198266285-165a0f2a1c7a");
-background-size:cover;
-background-position:center;
-}
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
 
-.container{
-width:380px;
-margin:120px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 10px rgba(0,0,0,0.3);
-}
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+            text-decoration: none;
+        }
 
-h2{
-text-align:center;
-margin-bottom:20px;
-}
+        .logo span {
+            color: #ff6b35;
+        }
 
-input{
-width:100%;
-padding:10px;
-margin-top:8px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:4px;
-}
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
 
-button{
-width:100%;
-padding:10px;
-background:#0066cc;
-border:none;
-color:white;
-font-size:16px;
-border-radius:4px;
-cursor:pointer;
-}
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
 
-button:hover{
-background:#004c99;
-}
+        .nav a:hover, .nav a.active {
+            color: #1a73e8;
+        }
 
-.links{
-text-align:center;
-margin-top:15px;
-}
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #1a73e8;
+            transition: width 0.3s ease;
+        }
 
-a{
-text-decoration:none;
-color:#0066cc;
-}
+        .nav a:hover::after, .nav a.active::after {
+            width: 100%;
+        }
 
-</style>
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 30px 40px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+        }
+
+        .login-header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .login-form {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 45px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1a73e8;
+        }
+
+        .remember-me label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            font-size: 14px;
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .social-button:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+            transform: translateY(-1px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .register-link p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .register-link a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 20px 40px;
+            }
+
+            .login-container {
+                margin: 0 10px;
+            }
+
+            .login-form {
+                padding: 30px 20px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .nav {
+                gap: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Flight<span>Book</span></a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/search-flights">Flights</a>
+                <a href="/login" class="active">Login</a>
+            </nav>
+        </div>
+    </header>
 
-<div class="header">
-<h1>Flight Booking System</h1>
-</div>
+    <main class="main-content">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to your FlightBook account</p>
+            </div>
 
-<div class="container">
+            <form class="login-form" action="/auth/login" method="post">
+                <div id="error-message" class="error-message" th:if="${errorMessage}" th:text="${errorMessage}" th:style="'display: block;'">
+                </div>
 
-<h2>User Login</h2>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
 
-<form action="/login" method="post">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
 
-<label>Email</label>
-<input type="email" name="email">
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="/auth/forgot-password" class="forgot-password">Forgot Password?</a>
+                </div>
 
-<label>Password</label>
-<input type="password" name="password">
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
 
-<button type="submit">Login</button>
+            <div class="register-link">
+                <a href="/admin/login" class="btn-register">admin login</a>
+                <p>Don't have an account?</p>
+                <a href="/register">Create your account</a>
+            </div>
+        </div>
+    </main>
 
-</form>
+    <script>
+        // Show error message if login failed (you can set this based on server response)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'true') {
+            document.getElementById('error-message').style.display = 'block';
+        }
 
-<div class="links">
-<p><a href="/auth/forgot-password">Forgot Password?</a></p>
-<p>New user? <a href="/auth/register">Register</a></p>
-</div>
+        // Form validation
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-</div>
+            if (!email || !password) {
+                e.preventDefault();
+                document.getElementById('error-message').textContent = 'Please fill in all fields.';
+                document.getElementById('error-message').style.display = 'block';
+                return;
+            }
 
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                document.getElementById('error-message').textContent = 'Please enter a valid email address.';
+                document.getElementById('error-message').style.display = 'block';
+                return;
+            }
+        });
+    </script>
 </body>
 </html>

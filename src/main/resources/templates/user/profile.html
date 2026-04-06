@@ -1,88 +1,667 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1504198266285-165a0f2a1c7a");
-background-size:cover;
-background-position:center;
-}
+        /* HEADER STYLING */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 30px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+            z-index: 1000;
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        /* LEFT SECTION */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
 
-.container{
-width:600px;
-margin:80px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        /* LOGO */
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
 
-.profile-row{
-margin-bottom:15px;
-}
+        .logo span {
+            color: #ffc107;
+        }
 
-label{
-font-weight:bold;
-}
+        /* USER INFO */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-button{
-margin-top:20px;
-padding:10px 15px;
-background:#0066cc;
-border:none;
-color:white;
-border-radius:4px;
-cursor:pointer;
-}
+        /* AVATAR */
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid white;
+        }
 
-button:hover{
-background:#004c99;
-}
+        /* USER DETAILS */
+        .user-details-header {
+            display: flex;
+            flex-direction: column;
+        }
 
-</style>
+        .user-name-header {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-email-header {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* LOGOUT BUTTON */
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                height: 70px;
+                padding: 0 15px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .member-since {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a73e8;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+        }
+
+        .edit-profile-btn:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+        }
+
+        .change-password-btn {
+            background: white;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+
+        .change-password-btn:hover {
+            background: #1a73e8;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .profile-details {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .details-section {
+            margin-bottom: 40px;
+        }
+
+        .details-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .verification-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .verified {
+            background: #e8f5e8;
+            color: #34a853;
+        }
+
+        .unverified {
+            background: #fff3cd;
+            color: #f57c00;
+        }
+
+        .travel-preferences {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .preference-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preference-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #34a853, #81c784);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .preference-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .recent-activity {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .activity-desc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .activity-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 968px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .preferences-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header th:replace="~{fragments/header :: header}"></header>
 
-<div class="header">
-<h1>User Profile</h1>
-</div>
+    <main class="main-content">
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">Manage your account information and preferences</p>
 
-<div class="container">
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <div class="profile-picture" th:text="${user.firstName != null and user.lastName != null ? user.firstName.substring(0,1) + user.lastName.substring(0,1) : 'U'}">U</div>
+                <h2 class="profile-name" th:text="${user.firstName} + ' ' + ${user.lastName}">John Doe</h2>
+                <div class="profile-email" th:text="${user.email}">john@example.com</div>
+                <div class="member-since" th:text="'Member since ' + (user.createdDate != null ? user.createdDate : 'N/A')">Member since Jan 2024</div>
 
-<div class="profile-row">
-<label>Name:</label> John Doe
-</div>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" th:text="${totalBookings != null ? totalBookings : 0}">12</span>
+                        <span class="stat-label">Bookings</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" th:text="${totalBookings != null ? totalBookings : 0}">8</span>
+                        <span class="stat-label">Flights</span>
+                    </div>
+                </div>
 
-<div class="profile-row">
-<label>Email:</label> john@example.com
-</div>
+                <div class="sidebar-actions">
+                    <a href="/edit-profile" class="action-btn edit-profile-btn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <button class="action-btn change-password-btn">
+                        <i class="fas fa-lock"></i> Change Password
+                    </button>
+                </div>
+            </div>
 
-<div class="profile-row">
-<label>Phone:</label> +91 9876543210
-</div>
+            <div class="profile-details">
+                <div class="details-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        Personal Information
+                    </h3>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <div class="detail-label">Full Name</div>
+                            <div class="detail-value" th:text="${user.firstName} + ' ' + ${user.lastName}">John Doe</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Email Address</div>
+                            <div class="detail-value" th:text="${user.email}">john@example.com</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Phone Number</div>
+                            <div class="detail-value" th:text="${user.phone != null ? user.phone : 'Not Provided'}">+91 9876543210</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Date of Birth</div>
+                            <div class="detail-value" th:text="${user.createdDate != null ? user.createdDate : 'N/A'}">Jan 15, 1990</div>
+                        </div>
+                    </div>
+                </div>
 
-<div class="profile-row">
-<label>Passport:</label> A12345678
-</div>
+                <div class="details-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-passport"></i>
+                        </div>
+                        Travel Documents
+                    </h3>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <div class="detail-label">Passport Number</div>
+                            <div class="detail-value">A12345678 <span class="verification-status verified"><i class="fas fa-check"></i> Verified</span></div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Passport Expiry</div>
+                            <div class="detail-value">Dec 15, 2030</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Nationality</div>
+                            <div class="detail-value">Indian</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Visa Status</div>
+                            <div class="detail-value">Valid for 180+ countries</div>
+                        </div>
+                    </div>
+                </div>
 
-<a href="/edit-profile">
-<button>Edit Profile</button>
-</a>
+                <div class="details-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        Travel Preferences
+                    </h3>
+                    <div class="travel-preferences">
+                        <div class="preferences-grid">
+                            <div class="preference-item">
+                                <div class="preference-icon">
+                                    <i class="fas fa-chair"></i>
+                                </div>
+                                <div class="preference-text">Window Seat</div>
+                            </div>
+                            <div class="preference-item">
+                                <div class="preference-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="preference-text">Vegetarian Meals</div>
+                            </div>
+                            <div class="preference-item">
+                                <div class="preference-icon">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                                <div class="preference-text">Newspaper</div>
+                            </div>
+                            <div class="preference-item">
+                                <div class="preference-icon">
+                                    <i class="fas fa-wifi"></i>
+                                </div>
+                                <div class="preference-text">WiFi Access</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-</div>
+                <div class="details-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        Recent Activity
+                    </h3>
 
+                    <div class="recent-activity" th:if="${bookings != null and !bookings.isEmpty()}">
+                        <div class="activity-item" th:each="booking : ${bookings}">
+                            <div class="activity-icon">
+                                <i class="fas fa-plane-departure"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title" th:text="${booking.status != null ? booking.status : 'Booking'}">Booking</div>
+                                <div class="activity-desc" th:text="${booking.route != null ? booking.route : 'Route not available'}">Route</div>
+                                <div class="activity-time" th:text="${booking.bookingDate != null ? booking.bookingDate : 'Date not available'}">Date</div>
+                                <div class="activity-desc" th:text="'Price: ₹' + (${booking.totalPrice} != null ? booking.totalPrice : 0)">₹0.0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recent-activity no-activity" th:if="${bookings == null or bookings.isEmpty()}">
+                        <p>No recent activity available.</p>
+                        <a href="/search-flights" class="book-now-btn" style="margin-top: 15px;display:inline-flex;">
+                            <i class="fas fa-search"></i> Search Flights
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener("DOMContentLoaded", function () {
+            const userEmail = document.querySelector(".user-email-header");
+
+            if (!userEmail || userEmail.textContent.trim() === "user@email.com") {
+                console.warn("User not logged in");
+            } else {
+                console.log("User logged in:", userEmail.textContent);
+            }
+        });
+
+        // Logout confirmation
+        function confirmLogout() {
+            return confirm("Are you sure you want to logout?");
+        }
+    </script>
 </body>
 </html>

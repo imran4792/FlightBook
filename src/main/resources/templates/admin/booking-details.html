@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details - FlightBook Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .details-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a73e8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a73e8;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+            padding: 10px 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .passenger-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .passenger-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .passenger-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #1557b0;
+        }
+
+        .btn-cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #c82333;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/manage-bookings" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Bookings</a>
+
+        <div class="header">
+            <h1><i class="fas fa-ticket-alt"></i> Booking Details</h1>
+            <p th:text="'Booking ID: ' + ${bookingId}"></p>
+        </div>
+
+        <div class="details-container" th:if="${booking != null}">
+            <div class="section">
+                <h2 class="section-title">Booking Information</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Booking ID:</span>
+                    <span class="detail-value" th:text="${booking.bookingReference}">FB10245</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Booking Date:</span>
+                    <span class="detail-value" th:text="${booking.bookingDate}">29-03-2026</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                        <span th:class="'status-badge status-' + ${#strings.toLowerCase(booking.status)}" 
+                              th:text="${#strings.capitalize(#strings.toLowerCase(booking.status))}">Confirmed</span>
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Amount:</span>
+                    <span class="detail-value" th:text="'₹' + ${#numbers.formatDecimal(booking.totalPrice, 1, 'COMMA', 0, 'POINT')}">₹15,000</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Flight Information</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Flight Number:</span>
+                    <span class="detail-value" th:text="${booking.flightNumber}">AI101</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Route:</span>
+                    <span class="detail-value" th:text="${booking.route}">Delhi (DEL) - Mumbai (BOM)</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Passenger Information</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Passenger Name:</span>
+                    <span class="detail-value" th:text="${booking.passengerName}">Imran Khan</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Age:</span>
+                    <span class="detail-value" th:text="${booking.age}">30</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Booking</button>
+                <button th:if="${booking.status != 'CANCELLED' && booking.status != 'COMPLETED'}" 
+                        class="btn-cancel" 
+                        th:onclick="'cancelBooking(\'' + ${booking.bookingReference} + '\')'">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+                <a href="/admin/manage-bookings" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Bookings
+                </a>
+            </div>
+        </div>
+
+        <div class="details-container" th:if="${booking == null}">
+            <div style="text-align: center; padding: 50px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #fbbc04; margin-bottom: 20px;"></i>
+                <h2 style="color: #666; margin-bottom: 10px;">Booking Not Found</h2>
+                <p style="color: #999;">The booking with ID <strong th:text="${bookingId}"></strong> could not be found.</p>
+                <a href="/admin/manage-bookings" class="btn-back" style="margin-top: 20px; display: inline-block;">
+                    <i class="fas fa-arrow-left"></i> Back to Bookings
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function cancelBooking(bookingId) {
+            if (confirm(`Are you sure you want to cancel booking ${bookingId}?`)) {
+                // Send POST request to cancel booking
+                fetch(`/admin/cancel-booking/${bookingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'success') {
+                        alert('Booking cancelled successfully!');
+                        location.reload(); // Reload the page to show updated status
+                    } else {
+                        alert('Error: ' + result);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while cancelling the booking.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

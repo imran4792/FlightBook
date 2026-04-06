@@ -1,100 +1,433 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70");
-background-size:cover;
-background-position:center;
-}
+        .header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
 
-.nav{
-background:#004080;
-padding:10px;
-text-align:center;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
 
-.nav a{
-color:white;
-text-decoration:none;
-margin:0 15px;
-}
+        .logo span {
+            color: #ff6b35;
+        }
 
-.container{
-width:900px;
-margin:50px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-}
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-.card{
-border:1px solid #ccc;
-padding:20px;
-margin-bottom:20px;
-border-radius:5px;
-}
+        .user-info span {
+            font-weight: 500;
+        }
 
-button{
-padding:10px 15px;
-background:#0066cc;
-border:none;
-color:white;
-border-radius:4px;
-cursor:pointer;
-}
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
 
-</style>
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #1a73e8;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card.flights {
+            border-left-color: #ff6b35;
+        }
+
+        .stat-card.confirmed {
+            border-left-color: #34a853;
+        }
+
+        .stat-card.pending {
+            border-left-color: #fbbc04;
+        }
+
+        .stat-card.cancelled {
+            border-left-color: #ea4335;
+        }
+
+        .stat-card.users {
+            border-left-color: #1a73e8;
+        }
+
+        .stat-card.revenue {
+            border-left-color: #fbbc04;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card.flights .stat-icon {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+        }
+
+        .stat-card.confirmed .stat-icon {
+            background: rgba(52, 168, 83, 0.1);
+            color: #34a853;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: rgba(251, 188, 4, 0.1);
+            color: #fbbc04;
+        }
+
+        .stat-card.cancelled .stat-icon {
+            background: rgba(234, 67, 53, 0.1);
+            color: #ea4335;
+        }
+
+        .stat-card.users .stat-icon {
+            background: rgba(26, 115, 232, 0.1);
+            color: #1a73e8;
+        }
+
+        .stat-card.revenue .stat-icon {
+            background: rgba(251, 188, 4, 0.1);
+            color: #fbbc04;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .action-card:nth-child(2) .action-icon {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+        }
+
+        .action-card:nth-child(3) .action-icon {
+            background: linear-gradient(45deg, #34a853, #81c784);
+        }
+
+        .action-card:nth-child(4) .action-icon {
+            background: linear-gradient(45deg, #ea4335, #ef5350);
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .action-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .action-button {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .action-button {
+            background: #1557b0;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-title {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Flight<span>Book</span> Admin</div>
+            <div class="user-info">
+                <span th:text="'Welcome, ' + ${adminName != null ? adminName : 'Admin'}"></span>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
 
-<div class="header">
-<h1>Admin Dashboard</h1>
-</div>
+    <main class="main-content">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <p class="dashboard-subtitle">Manage flights, bookings, users, and system operations</p>
 
-<div class="nav">
-<a href="/admin/add-flight">Add Flight</a>
-<a href="/admin/manage-flights">Manage Flights</a>
-<a href="/admin/manage-bookings">Bookings</a>
-<a href="/admin/manage-users">Users</a>
-</div>
+        <div class="stats-grid">
+            <div class="stat-card flights">
+                <div class="stat-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <div class="stat-value" th:text="${totalFlights}"></div>
+                <div class="stat-label">Total Flights</div>
+            </div>
 
-<div class="container">
+            <div class="stat-card confirmed">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" th:text="${confirmedBookings}"></div>
+                <div class="stat-label">Confirmed Bookings</div>
+            </div>
 
-<div class="card">
-<h3>Add New Flight</h3>
-<a href="/admin/add-flight"><button>Add Flight</button></a>
-</div>
+            <div class="stat-card pending">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" th:text="${pendingBookings}"></div>
+                <div class="stat-label">Pending Bookings</div>
+            </div>
 
-<div class="card">
-<h3>Manage Flights</h3>
-<a href="/admin/manage-flights"><button>View Flights</button></a>
-</div>
+            <div class="stat-card cancelled">
+                <div class="stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-value" th:text="${cancelledBookings}"></div>
+                <div class="stat-label">Cancelled Bookings</div>
+            </div>
 
-<div class="card">
-<h3>Manage Bookings</h3>
-<a href="/admin/manage-bookings"><button>View Bookings</button></a>
-</div>
+            <div class="stat-card users">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value" th:text="${totalUsers}"></div>
+                <div class="stat-label">Registered Users</div>
+            </div>
 
-<div class="card">
-<h3>Manage Users</h3>
-<a href="/admin/manage-users"><button>View Users</button></a>
-</div>
+            <div class="stat-card revenue">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}"></div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
 
-</div>
+        <div class="actions-grid">
+            <a href="/admin/add-flight" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h3 class="action-title">Add New Flight</h3>
+                <p class="action-description">Create and schedule new flights in the system with all necessary details including routes, timings, and pricing.</p>
+                <span class="action-button">Add Flight</span>
+            </a>
 
+            <a href="/admin/manage-flights" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-plane-departure"></i>
+                </div>
+                <h3 class="action-title">Manage Flights</h3>
+                <p class="action-description">View, edit, and manage all existing flights. Update schedules, prices, and flight information.</p>
+                <span class="action-button">Manage Flights</span>
+            </a>
+
+            <a href="/admin/manage-bookings" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h3 class="action-title">Manage Bookings</h3>
+                <p class="action-description">Monitor and manage all flight bookings. View booking details, handle cancellations, and process refunds.</p>
+                <span class="action-button">Manage Bookings</span>
+            </a>
+
+            <a href="/admin/manage-users" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <h3 class="action-title">Manage Users</h3>
+                <p class="action-description">Administer user accounts, view user profiles, manage permissions, and handle user support requests.</p>
+                <span class="action-button">Manage Users</span>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Add some interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat cards on load
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+
+            // Add hover effects for action cards
+            const actionCards = document.querySelectorAll('.action-card');
+            actionCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

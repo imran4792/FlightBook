@@ -1,95 +1,610 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-<title>Passenger Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Details - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1529070538774-1843cb3265df");
-background-size:cover;
-background-position:center;
-}
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;  
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
 
-.container{
-width:600px;
-margin:80px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+            text-decoration: none;
+        }
 
-h2{
-text-align:center;
-margin-bottom:20px;
-}
+        .logo span {
+            color: #ff6b35;
+        }
 
-input{
-width:100%;
-padding:10px;
-margin-top:8px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:4px;
-}
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
 
-button{
-width:100%;
-padding:12px;
-background:#0066cc;
-border:none;
-color:white;
-font-size:16px;
-border-radius:4px;
-cursor:pointer;
-}
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
 
-button:hover{
-background:#004c99;
-}
+        .nav a:hover {
+            color: #1a73e8;
+        }
 
-</style>
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #1a73e8;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Profile Icon Styles */
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            display: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        
+        .profile-dropdown.show {
+            display: block;
+        }
+        
+        .profile-dropdown a,
+        .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-dropdown a:hover,
+        .profile-dropdown button:hover {
+            background-color: #f5f5f5;
+            color: #1a73e8;
+        }
+
+        .progress-bar {
+            background: white;
+            padding: 20px 30px;
+            margin-top: 80px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .progress-steps::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: #1a73e8;
+            z-index: 1;
+            transition: width 0.3s ease;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #666;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step.active {
+            background: #1a73e8;
+            border-color: #1a73e8;
+            color: white;
+        }
+
+        .step.completed {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .step-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-label.active {
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .main-content {
+            padding: 40px 30px;
+        }
+
+        .passenger-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .passenger-header {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .passenger-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .passenger-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .passenger-form {
+            padding: 40px;
+        }
+
+        .passenger-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .passenger-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .passenger-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a73e8;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .passenger-title i {
+            background: #1a73e8;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 45px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .continue-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            margin-top: 30px;
+        }
+
+        .continue-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .back-button {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #666;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .back-button:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .passenger-form {
+                padding: 30px 20px;
+            }
+
+            .passenger-section {
+                padding: 20px;
+            }
+
+            .progress-steps {
+                padding: 0 20px;
+            }
+
+            .step-labels {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .nav {
+                gap: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Flight<span>Book</span></a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/search-flights" class="active">Flights</a>
+                
+                <!-- Profile Icon if logged in, Login link if not -->
+                <div th:if="${session.userId == null}">
+                    <a href="/login">Login</a>
+                </div>
+                <div th:if="${session.userId != null}" style="position: relative;">
+                    <div class="profile-icon" onclick="toggleProfileDropdown()">
+                        <span th:text="${session.firstName?.substring(0,1)} + ${session.lastName?.substring(0,1)}">IK</span>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="/profile"><i class="fas fa-user" style="margin-right: 8px;"></i> Profile</a>
+                        <a href="/dashboard"><i class="fas fa-home" style="margin-right: 8px;"></i> Dashboard</a>
+                        <a href="/booking-history"><i class="fas fa-history" style="margin-right: 8px;"></i> Booking History</a>
+                        <button onclick="location.href='/logout'"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-<div class="header">
-<h1>Passenger Details</h1>
-</div>
+    <div class="progress-bar">
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="step completed">1</div>
+                <div class="step active">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+            </div>
+            <div class="step-labels">
+                <div class="step-label completed">Flight Search</div>
+                <div class="step-label active">Passenger Details</div>
+                <div class="step-label">Seat Selection</div>
+                <div class="step-label">Payment</div>
+            </div>
+        </div>
+    </div>
 
-<div class="container">
+    <div class="main-content">
+        <div class="passenger-container">
+            <div class="passenger-header">
+                <h1>Passenger Information</h1>
+                <p th:text="'Please provide details for ' + ${passengerCount} + ' passenger(s)'"></p>
+            </div>
 
-<h2>Enter Passenger Information</h2>
+            <form class="passenger-form" action="/seat-selection" method="post">
+                <input type="hidden" name="flightId" th:value="${flightId}" />
+                <input type="hidden" name="passengers" th:value="${passengers}" />
+                <input type="hidden" name="date" th:value="${date}" />
+                <div id="error-message" class="error-message">
+                    Please fill in all required fields for all passengers.
+                </div>
 
-<form action="/seat-selection">
+                <div th:each="i : ${#numbers.sequence(1, passengerCount)}" class="passenger-section">
+                    <div class="passenger-title">
+                        <i th:text="${i}"></i>
+                        <span th:text="'Passenger ' + ${i}"></span>
+                    </div>
 
-<label>Full Name</label>
-<input type="text" name="name">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <i class="fas fa-user"></i>
+                            <input type="text" th:name="'passenger' + ${i} + '_name'" required placeholder="Enter full name">
+                        </div>
 
-<label>Age</label>
-<input type="number" name="age">
+                        <div class="form-group">
+                            <label>Age</label>
+                            <i class="fas fa-birthday-cake"></i>
+                            <input type="number" th:name="'passenger' + ${i} + '_age'" required placeholder="Enter age" min="1" max="120">
+                        </div>
+                    </div>
 
-<label>Passport Number</label>
-<input type="text" name="passport">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Passport Number</label>
+                            <i class="fas fa-passport"></i>
+                            <input type="text" th:name="'passenger' + ${i} + '_passport'" required placeholder="Enter passport number">
+                        </div>
 
-<label>Email</label>
-<input type="email" name="email">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" th:name="'passenger' + ${i} + '_email'" required placeholder="Enter email address">
+                        </div>
+                    </div>
+                </div>
 
-<button type="submit">Continue</button>
+                <button type="submit" class="continue-button">
+                    <i class="fas fa-arrow-right"></i> Continue to Seat Selection
+                </button>
 
-</form>
+                <button type="button" class="back-button" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Back to Flight Selection
+                </button>
+            </form>
+        </div>
+    </div>
 
-</div>
+    <script>
+        // Form validation and passenger data storage
+        document.querySelector('.passenger-form').addEventListener('submit', function(e) {
+            const inputs = document.querySelectorAll('input[required]');
+            const errorDiv = document.getElementById('error-message');
+            let hasErrors = false;
 
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#dc3545';
+                    hasErrors = true;
+                } else {
+                    input.style.borderColor = '#e1e5e9';
+                }
+            });
+
+            if (hasErrors) {
+                e.preventDefault();
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'Please fill in all required fields for all passengers.';
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            } else {
+                errorDiv.style.display = 'none';
+                // Store passenger data in localStorage
+                const passengerCount = parseInt(document.querySelector('input[name="passengers"]').value.split(' ')[0]);
+                const passengers = [];
+                
+                for (let i = 1; i <= passengerCount; i++) {
+                    const passenger = {
+                        number: i,
+                        name: document.querySelector(`input[name="passenger${i}_name"]`).value,
+                        age: document.querySelector(`input[name="passenger${i}_age"]`).value,
+                        passport: document.querySelector(`input[name="passenger${i}_passport"]`).value,
+                        email: document.querySelector(`input[name="passenger${i}_email"]`).value
+                    };
+                    passengers.push(passenger);
+                }
+                
+                localStorage.setItem('passengerDetails', JSON.stringify(passengers));
+            }
+        });
+
+        // Real-time validation
+        document.querySelectorAll('input[required]').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.style.borderColor = '#28a745';
+                } else {
+                    this.style.borderColor = '#e1e5e9';
+                }
+            });
+        });
+
+        // Profile Dropdown Toggle
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileIcon = document.querySelector('.profile-icon');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && dropdown && !profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>

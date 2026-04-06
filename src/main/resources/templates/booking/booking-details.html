@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ff6b35;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav a:hover, .nav a.active {
+            color: #1a73e8;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #1a73e8;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after, .nav a.active::after {
+            width: 100%;
+        }
+        
+        /* Profile Icon Styles */
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            display: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        
+        .profile-dropdown.show {
+            display: block;
+        }
+        
+        .profile-dropdown a,
+        .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .profile-dropdown a:hover,
+        .profile-dropdown button:hover {
+            background: #f8f9fa;
+            color: #1a73e8;
+        }
+        
+        .profile-dropdown button {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .progress-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #34a853;
+            color: white;
+        }
+
+        .step.pending .step-circle {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .step-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .step.active .step-text {
+            color: #1a73e8;
+        }
+
+        .step.completed .step-text {
+            color: #34a853;
+        }
+
+        .step.pending .step-text {
+            color: #666;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 30px;
+        }
+
+        .booking-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .passenger-count {
+            background: #f0f8ff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: #1a73e8;
+        }
+
+        .flight-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .flight-details {
+            flex: 1;
+        }
+
+        .airline-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .airline-logo {
+            width: 40px;
+            height: 40px;
+            background: #1a73e8;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .flight-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .route {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .route-point {
+            text-align: center;
+        }
+
+        .city-code {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .city-name {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .time-display {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .route-connector {
+            margin: 0 20px;
+            color: #666;
+        }
+
+        .price-info {
+            text-align: right;
+        }
+
+        .price-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .passenger-details {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .passenger-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .passenger-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .passenger-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .passenger-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+        }
+
+        .form-display {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .continue-btn {
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .flight-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .price-info {
+                text-align: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .step {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Flight<span>Book</span></a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/search-flights">Flights</a>
+                
+                <!-- Profile Icon if logged in, Login link if not -->
+                <div th:if="${session.userId == null}">
+                    <a href="/login">Login</a>
+                </div>
+                <div th:if="${session.userId != null}" style="position: relative;">
+                    <div class="profile-icon" onclick="toggleProfileDropdown()">
+                        <span th:text="${session.firstName?.substring(0,1)} + ${session.lastName?.substring(0,1)}">IK</span>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="/profile"><i class="fas fa-user" style="margin-right: 8px;"></i> Profile</a>
+                        <a href="/dashboard"><i class="fas fa-home" style="margin-right: 8px;"></i> Dashboard</a>
+                        <a href="/booking-history"><i class="fas fa-history" style="margin-right: 8px;"></i> Booking History</a>
+                        <button onclick="location.href='/logout'"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step completed">
+                    <div class="step-circle">1</div>
+                    <div class="step-text">Search</div>
+                </div>
+                <div class="step completed">
+                    <div class="step-circle">2</div>
+                    <div class="step-text">Flight Details</div>
+                </div>
+                <div class="step completed">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">Seat Selection</div>
+                </div>
+                <div class="step active">
+                    <div class="step-circle">4</div>
+                    <div class="step-text">Booking Details</div>
+                </div>
+                <div class="step pending">
+                    <div class="step-circle">5</div>
+                    <div class="step-text">Payment</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 200px;">
+    <div class="container">
+        <div th:if="${errorMessage}" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <div class="booking-summary">
+            <div class="summary-header">
+                <h1 class="summary-title">Booking Summary</h1>
+                <div class="passenger-count" th:text="${passengers} + ' Passengers'"></div>
+            </div>
+
+            <div class="flight-info">
+                <div class="flight-details">
+                    <div class="airline-info">
+                        <div class="airline-logo" th:text="${flight.airline.airlineCode}"></div>
+                        <div>
+                            <div class="flight-number" th:text="${flight.airline.airlineName} + ' ' + ${flight.flightNumber}"></div>
+                        </div>
+                    </div>
+
+                    <div class="route">
+                        <div class="route-point">
+                            <div class="city-code" th:text="${flight.source}"></div>
+                            <div class="city-name" th:text="${flight.source}"></div>
+                            <div class="time-display" th:text="${flight.departureTime}"></div>
+                        </div>
+
+                        <div class="route-connector">
+                            <i class="fas fa-plane"></i>
+                        </div>
+
+                        <div class="route-point">
+                            <div class="city-code" th:text="${flight.destination}"></div>
+                            <div class="city-name" th:text="${flight.destination}"></div>
+                            <div class="time-display" th:text="${flight.arrivalTime}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="price-info">
+                    <div class="price-amount" th:text="'₹' + ${flight.price}"></div>
+                    <div class="price-label">per person</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="passenger-details">
+            <h2 class="section-title">Passenger Information</h2>
+            <div class="passenger-form" id="passenger-display">
+                <!-- Passenger details will be populated by JavaScript -->
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                <button type="button" class="back-btn" onclick="history.back()">Back to Seat Selection</button>
+                <button type="button" class="continue-btn" onclick="window.location.href='/payment'">Continue to Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load and display passenger details from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const passengerDetails = localStorage.getItem('passengerDetails');
+            const passengerDisplay = document.getElementById('passenger-display');
+
+            if (passengerDetails) {
+                const passengers = JSON.parse(passengerDetails);
+                
+                passengers.forEach(passenger => {
+                    const passengerCard = document.createElement('div');
+                    passengerCard.className = 'passenger-card';
+                    
+                    passengerCard.innerHTML = `
+                        <div class="passenger-header">
+                            <h3 class="passenger-title">Passenger ${passenger.number}</h3>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <div class="form-display">${passenger.name}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Age</label>
+                                <div class="form-display">${passenger.age}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Passport Number</label>
+                                <div class="form-display">${passenger.passport}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <div class="form-display">${passenger.email}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    passengerDisplay.appendChild(passengerCard);
+                });
+            } else {
+                passengerDisplay.innerHTML = '<p>No passenger details found. Please go back and enter passenger information.</p>';
+            }
+        });
+    </script>
+    
+    <script>
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileIcon = document.querySelector('.profile-icon');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && dropdown && !profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+    </main>
+</body>
+</html>

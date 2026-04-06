@@ -1,84 +1,750 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Edit Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - FlightBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background-image:url("https://images.unsplash.com/photo-1529070538774-1843cb3265df");
-background-size:cover;
-background-position:center;
-}
+        /* HEADER STYLING */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 30px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+            z-index: 1000;
+        }
 
-.header{
-background:#003366;
-color:white;
-padding:15px;
-text-align:center;
-}
+        /* LEFT SECTION */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
 
-.container{
-width:500px;
-margin:100px auto;
-background:white;
-padding:30px;
-border-radius:6px;
-box-shadow:0 0 8px rgba(0,0,0,0.3);
-}
+        /* LOGO */
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
 
-input{
-width:100%;
-padding:10px;
-margin-top:8px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:4px;
-}
+        .logo span {
+            color: #ffc107;
+        }
 
-button{
-width:100%;
-padding:10px;
-background:#28a745;
-border:none;
-color:white;
-border-radius:4px;
-cursor:pointer;
-}
+        /* USER INFO */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-button:hover{
-background:#1e7e34;
-}
+        /* AVATAR */
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid white;
+        }
 
-</style>
+        /* USER DETAILS */
+        .user-details-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name-header {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-email-header {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* LOGOUT BUTTON */
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                height: 70px;
+                padding: 0 15px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .edit-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-picture-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+            position: relative;
+        }
+
+        .picture-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 35px;
+            height: 35px;
+            background: #34a853;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+
+        .picture-upload:hover {
+            background: #2e7d32;
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-input {
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ea4335;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-select {
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            accent-color: #1a73e8;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .preferences-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .preferences-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .preference-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e1e5e9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preference-option:hover {
+            border-color: #1a73e8;
+            background: #f8f9fa;
+        }
+
+        .preference-option.selected {
+            border-color: #1a73e8;
+            background: #e3f2fd;
+        }
+
+        .preference-icon {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(45deg, #34a853, #81c784);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .preference-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #34a853, #81c784);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+
+        .btn-secondary:hover {
+            background: #1a73e8;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ea4335;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #34a853;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #34a853;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .preferences-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header th:replace="fragments/header :: header"></header>
 
-<div class="header">
-<h1>Edit Profile</h1>
-</div>
+    <main class="main-content">
+        <h1 class="page-title">Edit Profile</h1>
+        <p class="page-subtitle">Update your personal information and travel preferences</p>
 
-<div class="container">
+        <div class="edit-form-container">
+            <div class="success-message" id="success-message" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div class="error-message" id="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
-<form>
+            <div class="profile-header">
+                <div class="profile-picture-section">
+                    <div class="profile-picture">
+                        <i class="fas fa-user"></i>
+                        <div class="picture-upload">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="upload-text">Click to change profile picture</div>
+                </div>
+            </div>
 
-<label>Name</label>
-<input type="text" value="John Doe">
+            <form id="edit-profile-form" th:object="${user}" method="post" action="/update-profile">
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        Personal Information
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-input" th:field="*{firstName}" required>
+                            <div class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-input" th:field="*{lastName}" required>
+                            <div class="error-message" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" th:field="*{email}" required>
+                            <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" th:field="*{phone}" required>
+                            <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-input" th:field="*{createdDate}" required>
+                            <div class="error-message">Date of birth is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="male" selected>Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message">Please select your gender</div>
+                        </div>
+                    </div>
+                </div>
 
-<label>Email</label>
-<input type="email" value="john@example.com">
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-passport"></i>
+                        </div>
+                        Travel Documents
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Passport Number</label>
+                            <input type="text" class="form-input" value="A12345678" required>
+                            <div class="error-message">Passport number is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Passport Expiry Date</label>
+                            <input type="date" class="form-input" value="2030-12-15" required>
+                            <div class="error-message">Passport expiry date is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nationality</label>
+                            <select class="form-select" required>
+                                <option value="">Select Nationality</option>
+                                <option value="indian" selected>Indian</option>
+                                <option value="american">American</option>
+                                <option value="british">British</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message">Please select your nationality</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact</label>
+                            <input type="tel" class="form-input" value="+91 9876543211" required>
+                            <div class="error-message">Emergency contact is required</div>
+                        </div>
+                    </div>
+                </div>
 
-<label>Phone</label>
-<input type="text" value="+91 9876543210">
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        Travel Preferences
+                    </h3>
+                    <div class="preferences-section">
+                        <div class="preferences-title">Select your travel preferences:</div>
+                        <div class="preferences-grid">
+                            <div class="preference-option selected">
+                                <div class="preference-icon">
+                                    <i class="fas fa-chair"></i>
+                                </div>
+                                <div class="preference-text">Window Seat</div>
+                            </div>
+                            <div class="preference-option">
+                                <div class="preference-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="preference-text">Vegetarian Meals</div>
+                            </div>
+                            <div class="preference-option selected">
+                                <div class="preference-icon">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                                <div class="preference-text">Newspaper</div>
+                            </div>
+                            <div class="preference-option">
+                                <div class="preference-icon">
+                                    <i class="fas fa-wifi"></i>
+                                </div>
+                                <div class="preference-text">WiFi Access</div>
+                            </div>
+                            <div class="preference-option">
+                                <div class="preference-icon">
+                                    <i class="fas fa-wheelchair"></i>
+                                </div>
+                                <div class="preference-text">Wheelchair Access</div>
+                            </div>
+                            <div class="preference-option">
+                                <div class="preference-icon">
+                                    <i class="fas fa-baby"></i>
+                                </div>
+                                <div class="preference-text">Bassinet</div>
+                            </div>
+                        </div>
+                    </div>
 
-<button type="submit">Update Profile</button>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" class="checkbox-input" checked>
+                        <label for="newsletter" class="checkbox-label">Subscribe to flight deals and travel updates</label>
+                    </div>
+                </div>
 
-</form>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a href="/profile" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
 
-</div>
+    <script>
+        // Form validation and interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('edit-profile-form');
+            const successMessage = document.getElementById('success-message');
+            const preferenceOptions = document.querySelectorAll('.preference-option');
 
+            // Preference selection
+            preferenceOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                });
+            });
+
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate required fields
+                const requiredFields = form.querySelectorAll('input[required], select[required]');
+                requiredFields.forEach(field => {
+                    const errorMessage = field.nextElementSibling;
+                    if (!field.value.trim()) {
+                        field.classList.add('error');
+                        errorMessage.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        field.classList.remove('error');
+                        errorMessage.style.display = 'none';
+                    }
+                });
+
+                // Email validation
+                const emailField = form.querySelector('input[type="email"]');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailField.value && !emailRegex.test(emailField.value)) {
+                    emailField.classList.add('error');
+                    emailField.nextElementSibling.textContent = 'Please enter a valid email address';
+                    emailField.nextElementSibling.style.display = 'block';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+
+                    // Here you would typically send the form data to the server
+                    console.log('Form submitted successfully');
+                }
+            });
+
+            // Real-time validation
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    const errorMessage = this.nextElementSibling;
+                    if (this.hasAttribute('required') && !this.value.trim()) {
+                        this.classList.add('error');
+                        errorMessage.style.display = 'block';
+                    } else {
+                        this.classList.remove('error');
+                        errorMessage.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener("DOMContentLoaded", function () {
+            const userEmail = document.querySelector(".user-email-header");
+
+            if (!userEmail || userEmail.textContent.trim() === "user@email.com") {
+                console.warn("User not logged in");
+            } else {
+                console.log("User logged in:", userEmail.textContent);
+            }
+        });
+
+        // Logout confirmation
+        function confirmLogout() {
+            return confirm("Are you sure you want to logout?");
+        }
+    </script>
 </body>
 </html>
