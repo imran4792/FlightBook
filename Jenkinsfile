@@ -33,7 +33,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                bat 'java -jar target/flightbooking-0.0.1-SNAPSHOT.jar'
+                echo 'Stopping old app (if running)...'
+                bat 'taskkill /F /IM java.exe || exit 0'
+
+                echo 'Starting new app...'
+                bat 'for %i in (target\\*.jar) do start /B java -jar %i'
             }
         }
     }
