@@ -31,14 +31,6 @@ pipeline {
             }
         }
 
-        // 🔥 NEW DOCKER STAGE
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                bat 'docker build -t flightbooking-app .'
-            }
-        }
-
         stage('Deploy') {
             steps {
                 echo 'Stopping old container (if running)...'
