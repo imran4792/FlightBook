@@ -27,7 +27,6 @@ pipeline {
                     taskkill /F /PID %%a
                 )
                 '''
-
                 echo 'Starting new app...'
                 bat 'start /B java -jar target\\flightbooking-1.0.jar'
             }
