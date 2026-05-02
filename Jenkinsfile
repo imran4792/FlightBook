@@ -31,10 +31,10 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+       stage('Deploy') {
     steps {
-        echo 'Starting new app...'
-        bat 'start /B java -jar target\\flightbooking-1.0.jar'
+        echo 'Starting app (visible mode)...'
+        bat 'java -jar target\\flightbooking-1.0.jar'
     }
 }
     }
