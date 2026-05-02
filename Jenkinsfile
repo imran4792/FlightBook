@@ -13,21 +13,9 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
                 bat 'mvn clean install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                bat 'mvn test'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                bat 'mvn package'
             }
         }
 
@@ -37,7 +25,7 @@ pipeline {
                 bat 'taskkill /F /IM java.exe || exit 0'
 
                 echo 'Starting new app...'
-                bat 'for %i in (target\\*.jar) do start /B java -jar %i'
+                bat 'for %%i in (target\\*.jar) do start /B java -jar %%i'
             }
         }
     }
