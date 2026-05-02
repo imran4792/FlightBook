@@ -13,7 +13,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
                 bat 'mvn clean install'
             }
@@ -31,16 +31,19 @@ pipeline {
             }
         }
 
-
-
         stage('Deploy') {
-            steps {
-                echo 'Stopping old app (if running)...'
-                bat 'taskkill /F /IM java.exe || exit 0'
+    steps {
+        echo 'Stopping old app (if running)...'
+        bat '''
+        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8080') do (
+            taskkill /F /PID %%a
+        )
 
-                echo 'Starting new app...'
-                bat 'for %i in (target\\*.jar) do start /B java -jar %i'
-            }
-        }
+        
+        '''
+        echo 'Starting new app...'
+        bat 'start /B java -jar target\\flightbooking-1.0.jar'
+    }
+}
     }
 }
