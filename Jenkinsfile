@@ -32,19 +32,19 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-key', keyFileVariable: 'KEY')]) {
+       stage('Deploy') {
+    steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-key', keyFileVariable: 'KEY')]) {
 
-                    bat """
-                    scp -o StrictHostKeyChecking=no -i %KEY% target\\%APP_NAME% ubuntu@%EC2_IP%:/home/ubuntu/
+            bat """
+            scp -o StrictHostKeyChecking=no -i %KEY% target\\flightbooking-1.0.jar ec2-user@13.206.121.36:/home/ec2-user/
 
-                    ssh -o StrictHostKeyChecking=no -i %KEY% ubuntu@%EC2_IP% "pkill -f %APP_NAME% || true"
+            ssh -o StrictHostKeyChecking=no -i %KEY% ec2-user@13.206.121.36 "pkill -f flightbooking-1.0.jar || true"
 
-                    ssh -o StrictHostKeyChecking=no -i %KEY% ubuntu@%EC2_IP% "nohup java -jar /home/ubuntu/%APP_NAME% > app.log 2>&1 &"
-                    """
-                }
-            }
+            ssh -o StrictHostKeyChecking=no -i %KEY% ec2-user@13.206.121.36 "nohup java -jar /home/ec2-user/flightbooking-1.0.jar > app.log 2>&1 &"
+            """
         }
+    }
+}
     }
 }
