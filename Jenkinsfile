@@ -12,9 +12,17 @@ pipeline {
 
     stages {
 
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/your-username/your-repo.git'
+                git branch: 'main',
+                    credentialsId: 'github-creds',
+                    url: 'https://github.com/imran4792/FlightBook.git'
             }
         }
 
@@ -24,23 +32,16 @@ pipeline {
             }
         }
 
-
-        stage('Clean Workspace') {
-    steps {
-        deleteDir()
-    }
-}
-
         stage('Deploy to EC2') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-key', keyFileVariable: 'KEY')]) {
 
                     bat """
-                    scp -o StrictHostKeyChecking=no -i %KEY% target\\%APP_NAME% ec2-user@%EC2_IP%:/home/ec2-user/
+                    scp -o StrictHostKeyChecking=no -i %KEY% target\\%APP_NAME% ubuntu@%EC2_IP%:/home/ubuntu/
 
-                    ssh -o StrictHostKeyChecking=no -i %KEY% ec2-user@%EC2_IP% "pkill -f %APP_NAME% || true"
+                    ssh -o StrictHostKeyChecking=no -i %KEY% ubuntu@%EC2_IP% "pkill -f %APP_NAME% || true"
 
-                    ssh -o StrictHostKeyChecking=no -i %KEY% ec2-user@%EC2_IP% "nohup java -jar /home/ec2-user/%APP_NAME% > app.log 2>&1 &"
+                    ssh -o StrictHostKeyChecking=no -i %KEY% ubuntu@%EC2_IP% "nohup java -jar /home/ubuntu/%APP_NAME% > app.log 2>&1 &"
                     """
                 }
             }
