@@ -24,6 +24,13 @@ pipeline {
             }
         }
 
+
+        stage('Clean Workspace') {
+    steps {
+        deleteDir()
+    }
+}
+
         stage('Deploy to EC2') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-key', keyFileVariable: 'KEY')]) {
