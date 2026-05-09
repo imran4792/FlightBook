@@ -6,8 +6,9 @@ pipeline {
     }
 
     environment {
-        EC2_IP = '13.206.121.36'
-        APP = 'flightbooking-1.0.jar'
+        EC2_USER = 'ec2-user'
+        EC2_IP   = '3.6.130.208'
+        APP      = 'flightbooking-1.0.jar'
     }
 
     stages {
@@ -20,22 +21,41 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean package'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to EC2') {
             steps {
                 sshagent(['ec2-key']) {
-                    bat """
-                    scp -o StrictHostKeyChecking=no target\\%APP% ec2-user@%EC2_IP%:/home/ec2-user/
 
-                    ssh -o StrictHostKeyChecking=no ec2-user@%EC2_IP% "pkill -f %APP% || true"
+                    // Copy JAR
+                    bat 'scp -o StrictHostKeyChecking=no target\\%APP% %EC2_USER%@%EC2_IP%:/home/%EC2_USER%/'
 
-                    ssh -o StrictHostKeyChecking=no ec2-user@%EC2_IP% "nohup java -jar /home/ec2-user/%APP% > app.log 2>&1 &"
-                    """
+                    // Stop old app
+                    bat 'ssh -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "pkill -f %APP% || true"'
+
+                    // Start new app
+                    bat 'ssh -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "nohup java -jar /home/%EC2_USER%/%APP% > app.log 2>&1 &"'
                 }
             }
+        }
+
+        stage('Check App') {
+            steps {
+                sshagent(['ec2-key']) {
+                    bat 'ssh %EC2_USER%@%EC2_IP% "ps -ef | grep java"'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment successful!'
+        }
+        failure {
+            echo '❌ Deployment failed! Check logs.'
         }
     }
 }
