@@ -10,7 +10,7 @@ pipeline {
         EC2_IP   = '3.6.130.208'
         DOMAIN   = 'https://flightbook.mooo.com'
         APP      = 'flightbooking-1.0.jar'
-        KEY_PATH = 'C:\\ProgramData\\Jenkins\\.ssh\\mykey.pem'
+      KEY_PATH = 'C:\\Users\\ik970\\.ssh\\mykey.pem'
     }
 
     stages {
