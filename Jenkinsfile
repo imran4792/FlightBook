@@ -8,7 +8,9 @@ pipeline {
     environment {
         EC2_USER = 'ec2-user'
         EC2_IP   = '3.6.130.208'
+        DOMAIN   = 'https://flightbook.mooo.com'
         APP      = 'flightbooking-1.0.jar'
+        KEY_PATH = 'C:\\ProgramData\\Jenkins\\.ssh\\mykey.pem'
     }
 
     stages {
@@ -27,32 +29,35 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['ec2-key']) {
+                bat """
+                echo ===== COPYING JAR TO EC2 =====
+                scp -o StrictHostKeyChecking=no -i %KEY_PATH% %WORKSPACE%\\target\\%APP% %EC2_USER%@%EC2_IP%:/home/%EC2_USER%/
 
-                    // Copy JAR
-                    bat 'scp -o StrictHostKeyChecking=no target\\%APP% %EC2_USER%@%EC2_IP%:/home/%EC2_USER%/'
+                echo ===== STOPPING OLD APP =====
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% %EC2_USER%@%EC2_IP% "pkill -f %APP% || true"
 
-                    // Stop old app
-                    bat 'ssh -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "pkill -f %APP% || true"'
-
-                    // Start new app
-                    bat 'ssh -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "nohup java -jar /home/%EC2_USER%/%APP% > app.log 2>&1 &"'
-                }
+                echo ===== STARTING NEW APP =====
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% %EC2_USER%@%EC2_IP% "nohup java -jar /home/%EC2_USER%/%APP% > app.log 2>&1 &"
+                """
             }
         }
 
-        stage('Check App') {
+        stage('Check App (Domain)') {
             steps {
-                sshagent(['ec2-key']) {
-                    bat 'ssh %EC2_USER%@%EC2_IP% "ps -ef | grep java"'
-                }
+                bat """
+                echo ===== WAITING FOR APP START =====
+                timeout /t 15
+
+                echo ===== CHECKING DOMAIN =====
+                curl -k %DOMAIN%
+                """
             }
         }
     }
 
     post {
         success {
-            echo '✅ Deployment successful!'
+            echo '✅ Deployment successful! App is live at https://flightbook.mooo.com'
         }
         failure {
             echo '❌ Deployment failed! Check logs.'
